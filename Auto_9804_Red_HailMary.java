@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by stevecox on 2-6-16 at 4:27 pm.
- * v2 by stevecox on 2-6-16 at 8:33 pm.
  *
  * Setup at edge of first full box from the center blue/red line on the red side
  * Facing the shelter BACKWARDS
