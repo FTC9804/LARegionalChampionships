@@ -1,6 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * spins counter clockwise 90º
  * Drive forward 3.5*(2sqrt2)*12 = 118.794 inches
  * release grabbers
+ *
  */
 public class Auto_9804_Red_DelayOmaha extends LinearOpMode {
 
@@ -43,7 +44,7 @@ public class Auto_9804_Red_DelayOmaha extends LinearOpMode {
 
     double targetDistance;
     double encoderCountsPerRotation = 1440;
-    double diameter = 2;
+    double diameter = 2.0;
     double circumference = diameter * 3.14159;
     double rotations;
     double targetEncoderCounts;
