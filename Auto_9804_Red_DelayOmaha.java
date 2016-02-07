@@ -6,15 +6,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by stevecox on 2-6-16 at 5:30 pm.
+ * Created by stevecox on 2-6-16 at 5:55 pm.
  * Setup at edge of first full box from the center blue/red line on the red side
  * Facing the shelter BACKWARDS
+ * delay 10 seconds
  * Drive for 2*2sqrt(2)*12 = 67.88 inches
- * spins clockwise 90º
- * Drive forward 48 inches
+ * spins counter clockwise 90º
+ * Drive forward 3.5*(2sqrt2)*12 = 118.794 inches
  * release grabbers
  */
-public class Auto_9804_Red_HookFarClose extends LinearOpMode {
+public class Auto_9804_Red_DelayOmaha extends LinearOpMode {
 
     //drive motors
     DcMotor driveLeftBack;
@@ -91,6 +92,10 @@ public class Auto_9804_Red_HookFarClose extends LinearOpMode {
         driveRightBack.setDirection(DcMotor.Direction.REVERSE);
         driveRightFront.setDirection(DcMotor.Direction.REVERSE);
 
+        this.resetStartTime();
+        while (this.getRuntime() < 11) {
+            waitOneFullHardwareCycle();
+        }
 
 
         //DRIVE BACKWARDS 110 INCHES
@@ -187,7 +192,7 @@ public class Auto_9804_Red_HookFarClose extends LinearOpMode {
         driveGain = 0.05;                    //OK for spin
 
         midPower = 0.0;                     //spin move: zero driving-forward power
-        targetHeading = 90;                // 90 degrees CW (using signed heading)
+        targetHeading = -90;                // 90 degrees CCW (using signed heading)
 
         telemetry.clearData();
 
@@ -228,7 +233,7 @@ public class Auto_9804_Red_HookFarClose extends LinearOpMode {
             waitOneFullHardwareCycle();
 
 
-        } while (currentHeading < targetHeading         //we are going to +90, so we will loop while <
+        } while (currentHeading > targetHeading         //we are going to -90, so we will loop while >
                 && this.getRuntime() < 2);
 
         driveLeftBack.setPower(0.0);
@@ -254,7 +259,7 @@ public class Auto_9804_Red_HookFarClose extends LinearOpMode {
         midPower = 0.75;
         targetHeading = 90;              //drive straight ahead
 
-        targetDistance = 48.0;          //drive straight 120 inches
+        targetDistance = 118.794;          //drive straight 120 inches
         rotations = targetDistance / circumference;
         targetEncoderCounts = encoderCountsPerRotation * rotations;
 

@@ -6,15 +6,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by stevecox on 2-6-16 at 5:30 pm.
+ * Created by stevecox on 2-6-16 at 5:53 pm.
  * Setup at edge of first full box from the center blue/red line on the red side
  * Facing the shelter BACKWARDS
- * Drive for 2*2sqrt(2)*12 = 67.88 inches
+ * Drive for 3*2sqrt(2)*12 = 101.823 inches
  * spins clockwise 90º
  * Drive forward 48 inches
  * release grabbers
  */
-public class Auto_9804_Red_HookFarClose extends LinearOpMode {
+public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
 
     //drive motors
     DcMotor driveLeftBack;
@@ -103,7 +103,7 @@ public class Auto_9804_Red_HookFarClose extends LinearOpMode {
         midPower = 0.66;
         targetHeading = 0;              //drive straight ahead
 
-        targetDistance = 67.88;          //drive straight 95 inches
+        targetDistance = 101.823;          //drive straight 95 inches
         rotations = targetDistance / circumference;
         targetEncoderCounts = encoderCountsPerRotation * rotations;
 
