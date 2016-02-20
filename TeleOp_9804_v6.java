@@ -57,6 +57,9 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
     //servo to drop arm for climbers
     Servo box;
     
+    //servo for debris sweeping away
+    Servo sweep;
+    
     //variables for driving
     float trailingPowerRight;
     double leadingPowerRight;
@@ -79,6 +82,10 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
     double boxMovingUp = 0.2;
     double boxStopMoving = 0.5;
     double boxPower = 0.5;
+    
+    double sweepOpened = 0.5;
+    double sweepClosed = 0;
+    double sweepPosition = sweepClosed;
     
 
     //gives the state of the magnet sensors for the LED activation and ability to stop the motors
@@ -273,6 +280,16 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
 		}
 
 		box.setPosition(boxPower); 
+		
+		
+		if (gamepad1.b) {
+			sweepPosition = sweepOpened;
+		}
+		else {
+			sweepPosition = sweepClosed;
+		}
+		
+		sweep.setPosition(sweepPosition);
 
         //takes input from bumpers and triggers for the locking grab motors set individually
         if (gamepad1.right_bumper) {
