@@ -55,7 +55,7 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
     Servo score;
 
     //servo to drop arm for climbers
-    Servo drop;
+    Servo box;
     
     //variables for driving
     float trailingPowerRight;
@@ -74,10 +74,12 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
     double scoreOpened = 0.0;               //hopper door is open (DOWN)
     double scorePosition = scoreClosed;     //current position of door, initialize to UP
 
-    //servo variable for continuous rotation drop servo
-    double dropMovingDown = 0.75;
-    double dropMovingUp = 0.25;
-    double dropStopMoving = 0.5;
+    //servo variable for continuous rotation box servo
+    double boxMovingDown = 0.8;
+    double boxMovingUp = 0.2;
+    double boxStopMoving = 0.5;
+    double boxPower = 0.5;
+    
 
     //gives the state of the magnet sensors for the LED activation and ability to stop the motors
     boolean armsNotExtended = true; // state of magnetic sensors
@@ -152,7 +154,7 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
         grabLeft = hardwareMap.servo.get("s1");             // xx on servo controller SN VSI1
         grabRight = hardwareMap.servo.get("s2");            // xx on servo controller
         score = hardwareMap.servo.get("s3");
-        drop = hardwareMap.servo.get("s4");
+        box = hardwareMap.servo.get("s4");
         
         //calculate the winch to arm ratio
 		getWinchToArmRatio(winchDiameter, armsPinionDiameter);
@@ -161,7 +163,7 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
         grabLeft.setPosition(grabLeftUp);
         grabRight.setPosition(grabRightUp);
         score.setPosition(scoreClosed);
-        drop.setPosition(dropStopMoving);
+        box.setPosition(boxStopMoving);
 
         this.resetStartTime();     //reset to allow time for servos to reach initialized positions
 
@@ -251,12 +253,26 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
         //takes input from buttons for spin motors
         if (gamepad2.a) {                   //collect debris
             spin.setPower(-1);
+            boxPower = boxMovingUp;
         } else if (gamepad2.y) {            //eject or sweep away debris
             spin.setPower(1);
+            boxPower = boxStopMoving;
         } else {
             spin.setPower(0);
+            boxPower = boxStopMoving;
         }
 
+		if (gamepad1.y) {
+			boxPower = boxMovingDown;
+		}
+		else if (gamepad1.a) {
+			boxPower = boxMovingUp;
+		}
+		else {
+			boxPower = boxStopMoving;
+		}
+
+		box.setPosition(boxPower); 
 
         //takes input from bumpers and triggers for the locking grab motors set individually
         if (gamepad1.right_bumper) {
@@ -271,17 +287,6 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
         } else if (gamepad1.left_trigger > .3) {
             grabLeft.setPosition(grabLeftDown);
         }
-
-        //sets score to a value because a button is pressed
-        if (gamepad1.a) {                           //when button is pressed, set the position to
-            scorePosition -= .02;                   //just less than it was in the previous loop
-            if (scorePosition < scoreOpened) {      //when the score position's math tells it to go
-                scorePosition = scoreOpened;        //beyond the maximum point,
-            }                                       //set it to the maximum point
-        } else if (gamepad1.y) {                    //when pressing the button,
-            scorePosition = scoreClosed;            //return to starting position
-        }
-        score.setPosition(scorePosition);           //set the servo to the position designated
 
 
     //Proportional Arm and Winch extension
