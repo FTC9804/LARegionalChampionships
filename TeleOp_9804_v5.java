@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //first draft of controlling arms extension relative to winching speed
 //renamed to TeleOp_9804 on 2-19-16 at 4:44 PM Steve C. 
 //continue coding cleanup and commenting, setup buttons for arms & winch extension
+//added clipping for the gain
 
 
 
@@ -102,7 +103,7 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
 	double armsSpeedError;					//error between target and current speeds
 	double armsMotorPower;					//power giving to the arms
 	double winchCircumference;				//circumference of the winch
-	double winchDiameter = 2.5; 			// inches
+	double winchDiameter = 2.5; 			//inches
 	double armsPinionDiameter = 0.75; 		//inches
 	double pinionCircumference;				//circumference of pinion
 	double winchToArmRatio;					//ratio of winch to arm
@@ -308,58 +309,73 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
 
 		if ((gamepad2.right_bumper || gamepad2.left_bumper) && armsNotExtended) {      //moves arms and winches with d-pad buttons,
 
-		leftWinch.setPower(1.0);
-		rightWinch.setPower(1.0);
-		this.resetStartTime();
+			leftWinch.setPower(1.0);
+			rightWinch.setPower(1.0);
+			this.resetStartTime();
 
-		//
-		initialWinchPosition = Math.abs(leftWinch.getCurrentPosition());
-		initialArmPosition = Math.abs(arms.getCurrentPosition());
+			//
+			initialWinchPosition = Math.abs(leftWinch.getCurrentPosition());
+			initialArmPosition = Math.abs(arms.getCurrentPosition());
 
-		while (this.getRuntime() < 50) {} //assuming 50 is in ms
+			while (this.getRuntime() < 50) {} //assuming 50 is in ms
 
-		currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
-		currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
+			currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
+			currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
 
-		//calculate the speeds
-		currentWinchSpeed = currentWinchEncoderCounts/this.time; //units are clicks / ms
-		currentArmsSpeed = currentArmEncoderCounts/this.time; 	//units are clicks / ms
+			//calculate the speeds
+			currentWinchSpeed = currentWinchEncoderCounts/this.time; //units are clicks / ms
+			currentArmsSpeed = currentArmEncoderCounts/this.time; 	//units are clicks / ms
 
-		targetArmsSpeed = currentWinchSpeed * winchToArmRatio;
+			targetArmsSpeed = currentWinchSpeed * winchToArmRatio;
 
-		armsSpeedError =  currentArmsSpeed - targetArmsSpeed;
+			armsSpeedError =  currentArmsSpeed - targetArmsSpeed;
 
-		armsMotorPower = armsSpeedError * armsSpeedGain;
+			armsMotorPower = armsSpeedError * armsSpeedGain;
 
-		arms.setPower(armsMotorPower);
+			if (armsMotorPower > 1) {
+				armsMotorPower = 1;
+			}
+			if (armsMotorPower < 0) {
+				armsMotorPower = 0;
+			}
+
+
+			arms.setPower(armsMotorPower);
 
         } else if ((gamepad2.right_trigger > .3 || gamepad2.left_trigger > .3) && armsNotRetracted) {
 
-		leftWinch.setPower(-1.0);
-		rightWinch.setPower(-1.0);
-		this.resetStartTime();
+			leftWinch.setPower(-1.0);
+			rightWinch.setPower(-1.0);
+			this.resetStartTime();
 
-		//
-		initialWinchPosition = Math.abs(leftWinch.getCurrentPosition());
-		initialArmPosition = Math.abs(arms.getCurrentPosition());
+			//
+			initialWinchPosition = Math.abs(leftWinch.getCurrentPosition());
+			initialArmPosition = Math.abs(arms.getCurrentPosition());
 		
 
-		while (this.getRuntime() < 50) {} //assuming 50 is in ms
+			while (this.getRuntime() < 50) {} //assuming 50 is in ms
 
-		currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
-		currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
+			currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
+			currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
 
-		//calculate the speeds
-		currentWinchSpeed = currentWinchEncoderCounts/this.time; //units are clicks / ms
-		currentArmsSpeed = currentArmEncoderCounts/this.time; 	//units are clicks / ms
+			//calculate the speeds
+			currentWinchSpeed = currentWinchEncoderCounts/this.time; //units are clicks / ms
+			currentArmsSpeed = currentArmEncoderCounts/this.time; 	//units are clicks / ms
 
-		targetArmsSpeed = currentWinchSpeed * winchToArmRatio;
+			targetArmsSpeed = currentWinchSpeed * winchToArmRatio;
 
-		armsSpeedError =  currentArmsSpeed - targetArmsSpeed;
+			armsSpeedError =  currentArmsSpeed - targetArmsSpeed;
 
-		armsMotorPower = armsSpeedError * armsSpeedGain;
+			armsMotorPower = armsSpeedError * armsSpeedGain;
 
-		arms.setPower(-armsMotorPower);
+			if (armsMotorPower < -1) {
+				armsMotorPower = -1;
+			}
+			if (armsMotorPower > 0) {
+				armsMotorPower = 0;
+			}
+
+			arms.setPower(armsMotorPower);
 
         } else {
             arms.setPower(0);
