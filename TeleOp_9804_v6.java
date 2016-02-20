@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //continue coding cleanup and commenting, setup buttons for arms & winch extension
 //added clipping for the gain
 //renamed to TeleOp_9804_v6 on 2-19-16 at 8:14 PM by Steve C. & Etienne L.
-//establish buttons to use for competition
+//establish buttons to use for competition -- includes sweep and box servos
 
 
 
