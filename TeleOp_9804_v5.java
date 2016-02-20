@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 //renamed to TeleOP_9804_v3 on 1-30-16 at 3:31 PM
 //renamed to TeleOp_9804_v4_variableGain on 2-14-16 at 9:00 PM Etienne L.
 //first draft of controlling arms extension relative to winching speed
-//renamed to TeleOp_9804_v5_variableGain on 2-19-16 at 4:44 PM Steve C. 
-//continue coding cleanup and commenting, setup buttons for arms & winch entension
+//renamed to TeleOp_9804 on 2-19-16 at 4:44 PM Steve C. 
+//continue coding cleanup and commenting, setup buttons for arms & winch extension
 
 
 
