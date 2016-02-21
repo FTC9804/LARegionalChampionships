@@ -63,10 +63,10 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
     Servo sweep;
     
     //variables for driving
-    float trailingPowerRight;
-    double leadingPowerRight;
-    float trailingPowerLeft;
-    double leadingPowerLeft;
+    double trailingPowerRight;				//this code allows us to always give slightly
+    double leadingPowerRight;				//less power to leading motor to always
+    double trailingPowerLeft;				//ensure tension between the treads and 
+    double leadingPowerLeft;				//ground for maximum driver control
 
     //servo variables for grab servos
     double grabLeftUp = 0;                  //0 is max CCW (UP on left side)
@@ -91,8 +91,8 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
     
 
     //gives the state of the magnet sensors for the LED activation and ability to stop the motors
-    boolean armsNotExtended = true; // state of magnetic sensors
-    boolean armsNotRetracted = true;
+    boolean armsNotExtended = false; 	// state of magnetic sensors to false to light up
+    boolean armsNotRetracted = false;	//for initialization sequence
 
     //variables for the winch motors to allow automatic control with manual override
     double leftWinchSpeed = 0;
@@ -316,7 +316,7 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
 			rightWinch.setPower(1.0);
 			this.resetStartTime();
 
-			//
+			
 			initialWinchPosition = Math.abs(leftWinch.getCurrentPosition());
 			initialArmPosition = Math.abs(arms.getCurrentPosition());
 
@@ -419,5 +419,6 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
 		telemetry.addData("1", "winch to arm ratio:  " + String.format("%.2f", winchToArmRatio));
 
 		return winchToArmRatio;
-	}
+	}//finish ratio calculator
+	
 }//finish program
