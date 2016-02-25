@@ -5,15 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/**
+/*
  * Created by stevecox on 2-24-16 at 4:20 pm.
  * Setup at back left edge of SECOND full box from the center blue/red line on the red side
  * Facing the shelter BACKWARDS
  * Drive for 1.5*2sqrt(2)*12 = 50.91 inches backwards with spin motors running
  * spins counter clockwise 90º
- * Drive forward 24 inches FORWARDS
- * spin 180º
+ * Drive forward 12 inches BACKWARDS
+ * spin 180º CW
  * window wiper servo
+ * Drive forward 24 inches FORWARDS
  */
 public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
 
