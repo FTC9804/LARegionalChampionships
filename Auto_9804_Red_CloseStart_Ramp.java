@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by stevecox on 2-24-16 at 3:47 pm.
+ * Created by stevecox on 2-24-16 at 4:02 pm.
  * Setup at back left edge of first full box from the center blue/red line on the red side
  * Facing the shelter BACKWARDS
  * Drive for sqrt(2)*12 = 33.94 inches backwards with spin motors running
