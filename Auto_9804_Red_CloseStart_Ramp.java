@@ -105,7 +105,6 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
 
         //DRIVE BACKWARDS 33.94 INCHES
 
-
         telemetry.clearData();
 
         driveGain = 0.05;
@@ -176,7 +175,7 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
         driveLeftFront.setPower(0.0);
         driveRightBack.setPower(0.0);
         driveRightFront.setPower(0.0);
-        telemetry.clearData();
+
 
         spin.setPower (0);
 
@@ -266,7 +265,7 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
         //DRIVE FORWARDS 24 INCHES
 
 
-        telemetry.clearData();
+
 
         driveGain = 0.05;
 
@@ -335,7 +334,7 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
         driveLeftFront.setPower(0.0);
         driveRightBack.setPower(0.0);
         driveRightFront.setPower(0.0);
-        telemetry.clearData();
+
 
         spin.setPower (0);
 
