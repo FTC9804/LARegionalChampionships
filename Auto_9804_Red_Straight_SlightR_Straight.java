@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/**
+/*
  * Created by stevecox on 2-24-16 at 3:47 pm.
  * Setup at back left edge of first full box from the center blue/red line on the red side
  * Facing the shelter BACKWARDS
@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Drive backwards 24 inches
  * Do all this with spin motors running
  */
+
 public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
 
     //drive motors
@@ -66,7 +67,8 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
         driveRightBack = hardwareMap.dcMotor.get("m1");     // 1 on purple controller SN UVQF
         driveRightFront = hardwareMap.dcMotor.get("m2");    // 2 on purple
         spin = hardwareMap.dcMotor.get("m8");
-        //give the servo names for the servos
+
+        //give the configuration file names for the servos
         grabLeft = hardwareMap.servo.get("s1");             // xx on servo controller SN VSI1
         grabRight = hardwareMap.servo.get("s2");            // xx on servo controller
 
