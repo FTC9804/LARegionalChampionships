@@ -271,7 +271,7 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
         targetDistance = 24.0;          //drive straight 24 inches
         rotations = targetDistance / circumference;
         targetEncoderCounts = encoderCountsPerRotation * rotations;
-        targetEncoderCounts2 = targetEncoderCounts1 - targetEncoderCounts;
+        targetEncoderCounts2 = targetEncoderCounts1 + targetEncoderCounts;
 
         this.resetStartTime();
 
@@ -285,7 +285,7 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
             currentEncCountLeft = Math.abs(driveLeftBack.getCurrentPosition()) - initialEncCountLeft;
             currentEncCountRight = Math.abs(driveRightBack.getCurrentPosition()) - initialEncCountRight;
 
-            EncErrorLeft = targetEncoderCounts - currentEncCountLeft;
+            EncErrorLeft = targetEncoderCounts2 - currentEncCountLeft;
 
             telemetry.addData("Left Encoder:", currentEncCountLeft);
             telemetry.addData("Right Encoder:", currentEncCountRight);
@@ -325,7 +325,7 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
             waitOneFullHardwareCycle();
 
 
-        } while (EncErrorLeft > 0
+        } while (EncErrorLeft > initialEncCountLeft
                 && this.getRuntime() < 200);
 
         grabRight.setPosition(grabRightDown);
