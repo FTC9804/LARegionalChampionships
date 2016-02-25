@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * window wiper servo
  * Drive forward 24 inches FORWARDS
  */
-public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
+public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
 
     //drive motors
     DcMotor driveLeftBack;

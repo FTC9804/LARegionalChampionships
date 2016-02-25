@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
+public class Auto_9804_Red_CloseStart_Ramp extends LinearOpMode {
 
     //drive motors
     DcMotor driveLeftBack;

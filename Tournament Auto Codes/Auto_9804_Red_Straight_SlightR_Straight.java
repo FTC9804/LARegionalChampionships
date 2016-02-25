@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Do all this with spin motors running
  */
 
-public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
+public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
 
     //drive motors
     DcMotor driveLeftBack;
