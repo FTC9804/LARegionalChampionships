@@ -29,6 +29,8 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
     Servo grabLeft;
     Servo grabRight;
 
+    Servo box;
+
     //servo to push away debris from ramp
     Servo windowWiper;
 
@@ -66,7 +68,7 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
     double sweepOpened = 0.75;
     double sweepClosed = 0;
     double sweepPosition = sweepClosed;
-
+    double boxPosition = 0.5;
 
 
     @Override
@@ -81,12 +83,14 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
         grabLeft = hardwareMap.servo.get("s1");             // xx on servo controller SN VSI1
         grabRight = hardwareMap.servo.get("s2");            // xx on servo controller
         windowWiper = hardwareMap.servo.get("s5");
-
+        box = hardwareMap.servo.get("s4");
 
         //sets initial positions for the servos to activate to
         grabLeft.setPosition(grabLeftUp);
         grabRight.setPosition(grabRightUp);
         windowWiper.setPosition(sweepPosition);
+        box.setPosition(boxPosition);
+
 
         ModernRoboticsI2cGyro gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 

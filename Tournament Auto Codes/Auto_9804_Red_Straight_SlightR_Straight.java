@@ -28,6 +28,8 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
     Servo grabLeft;
     Servo grabRight;
 
+    Servo box;
+
     double midPower;
     int targetHeading;
     double driveGain = 0.1;
@@ -58,6 +60,8 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
     double grabLeftDown = 0.6;              //0.6 is approx. 90 degrees CW (DOWN on left side)
     double grabRightUp = 1.0;               //1 is max CW (UP on right side)
     double grabRightDown = 0.4;             //0.4 is approx. 90 degrees CCW (DOWN on right side)
+    double boxPosition = 0.5;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -71,10 +75,14 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
         //give the configuration file names for the servos
         grabLeft = hardwareMap.servo.get("s1");             // xx on servo controller SN VSI1
         grabRight = hardwareMap.servo.get("s2");            // xx on servo controller
+        box = hardwareMap.servo.get("s4");
+
 
         //sets initial positions for the servos to activate to
         grabLeft.setPosition(grabLeftUp);
         grabRight.setPosition(grabRightUp);
+        box.setPosition(boxPosition);
+
 
         ModernRoboticsI2cGyro gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 
