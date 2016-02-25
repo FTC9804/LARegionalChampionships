@@ -185,6 +185,7 @@ public class Auto_9804_Red_CloseStart_Ramp extends LinearOpMode {
 
 
         telemetry.addData("straight 1 done", telemetryVariable);
+
         resetStartTime();
         while (this.getRuntime() < 1) {
             waitOneFullHardwareCycle();
@@ -198,7 +199,7 @@ public class Auto_9804_Red_CloseStart_Ramp extends LinearOpMode {
         driveGain = 0.05;                    //OK for spin
 
         midPower = 0.0;                     //spin move: zero driving-forward power
-        targetHeading = 90;                // 90 degrees CW (using signed heading)
+        targetHeading = 90;                // +90 degrees CW (using signed heading)
 
         this.resetStartTime();
 
@@ -256,7 +257,7 @@ public class Auto_9804_Red_CloseStart_Ramp extends LinearOpMode {
         windowWiper.setPosition(sweepOpened);
 
         resetStartTime();
-        while (this.getRuntime() < 1) {
+        while (this.getRuntime() < 3) {
             waitOneFullHardwareCycle();
         }
 

@@ -396,6 +396,20 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
         }
 
 
+        //WINDOW WIPER MOTOR
+
+        windowWiper.setPosition(sweepOpened);
+
+        resetStartTime();
+        while (this.getRuntime() < 3) {
+            waitOneFullHardwareCycle();
+        }
+
+        windowWiper.setPosition(sweepClosed);
+
+
+
+
         //DRIVE FORWARDS 24 INCHES
 
         driveGain = 0.05;
@@ -477,13 +491,6 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
         while (this.getRuntime() < 1) {
             waitOneFullHardwareCycle();
         }
-
-        telemetry.addData("CODE COMPLETE", telemetryVariable);
-        resetStartTime();
-        while (this.getRuntime() < 1) {
-            waitOneFullHardwareCycle();
-        }
-
 
 
 
