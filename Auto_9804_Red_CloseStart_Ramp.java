@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by stevecox on 2-24-16 at 3:47 pm.
  * Setup at back left edge of first full box from the center blue/red line on the red side
  * Facing the shelter BACKWARDS
- * Drive for 2*2sqrt(2)*12 = 67.88 inches backwards
- * spins clockwise 45º
- * Drive backwards 24 inches
- * Do all this with spin motors running
+ * Drive for sqrt(2)*12 = 33.94 inches backwards with spin motors running
+ * spins clockwise 90º
+ * window wiper servo
+ * Drive forward 24 inches
  */
 public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
 
@@ -26,6 +26,9 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
     //servos to lock in place on ramp
     Servo grabLeft;
     Servo grabRight;
+
+    //servo to push away debris from ramp
+    Servo windowWiper;
 
     double midPower;
     int targetHeading;
@@ -52,11 +55,15 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
     int initialEncCountRight;
 
 
-    //servo variables for grab servos
+    //servo variables
     double grabLeftUp = 0;                  //0 is max CCW (UP on left side)
     double grabLeftDown = 0.6;              //0.6 is approx. 90 degrees CW (DOWN on left side)
     double grabRightUp = 1.0;               //1 is max CW (UP on right side)
     double grabRightDown = 0.4;             //0.4 is approx. 90 degrees CCW (DOWN on right side)
+    double sweepOpened = 0.75;
+    double sweepClosed = 0;
+    double sweepPosition = sweepClosed;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -70,9 +77,12 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
         grabLeft = hardwareMap.servo.get("s1");             // xx on servo controller SN VSI1
         grabRight = hardwareMap.servo.get("s2");            // xx on servo controller
 
+        windowWiper = hardwareMap.servo.get("s5");
+
         //sets initial positions for the servos to activate to
         grabLeft.setPosition(grabLeftUp);
         grabRight.setPosition(grabRightUp);
+        windowWiper.setPosition(sweepPosition);
 
         ModernRoboticsI2cGyro gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 
@@ -93,7 +103,7 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
 
 
 
-        //DRIVE BACKWARDS 67.88 INCHES
+        //DRIVE BACKWARDS 33.94 INCHES
 
 
         telemetry.clearData();
@@ -103,7 +113,7 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
         midPower = 0.66;
         targetHeading = 0;              //drive straight ahead
 
-        targetDistance = 67.88;          //drive straight 67.88 inches
+        targetDistance = 33.94;          //drive straight 33.94 inches
         rotations = targetDistance / circumference;
         targetEncoderCounts = encoderCountsPerRotation * rotations;
 
@@ -181,13 +191,13 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
 
 
 
-        // SPIN CW 45 DEGREES
+        // SPIN CW 90 DEGREES
 
 
         driveGain = 0.05;                    //OK for spin
 
         midPower = 0.0;                     //spin move: zero driving-forward power
-        targetHeading = 45;                // 45 degrees CW (using signed heading)
+        targetHeading = 90;                // 90 degrees CW (using signed heading)
 
         this.resetStartTime();
 
@@ -226,7 +236,7 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
             waitOneFullHardwareCycle();
 
 
-        } while (currentHeading < targetHeading         //we are going to +45, so we will loop while <
+        } while (currentHeading < targetHeading         //we are going to +90, so we will loop while <
                 && this.getRuntime() < 2);
 
         driveLeftBack.setPower(0.0);
@@ -234,15 +244,26 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
         driveRightBack.setPower(0.0);
         driveRightFront.setPower(0.0);
 
-        telemetry.addData("spin 45 done", telemetryVariable);
+        telemetry.addData("spin 90 done", telemetryVariable);
         resetStartTime();
         while (this.getRuntime() < 1) {
             waitOneFullHardwareCycle();
         }
 
+        //WINDOW WIPER MOTOR
+
+        windowWiper.setPosition(sweepOpened);
+
+        resetStartTime();
+        while (this.getRuntime() < 1) {
+            waitOneFullHardwareCycle();
+        }
+
+        windowWiper.setPosition(sweepClosed);
 
 
-        //DRIVE BACKWARDS 24 INCHES
+
+        //DRIVE FORWARDS 24 INCHES
 
 
         telemetry.clearData();
@@ -250,7 +271,7 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
         driveGain = 0.05;
 
         midPower = 0.75;
-        targetHeading = 45;              //drive straight ahead
+        targetHeading = 90;              //drive straight ahead
 
         targetDistance = 24.0;          //drive straight 24 inches
         rotations = targetDistance / circumference;
@@ -263,7 +284,6 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
 
 
         do {
-            spin.setPower(1);  // Eject debris while driving
 
             currentEncCountLeft = Math.abs(driveLeftBack.getCurrentPosition()) - initialEncCountLeft;
             currentEncCountRight = Math.abs(driveRightBack.getCurrentPosition()) - initialEncCountRight;
@@ -297,22 +317,19 @@ public class Auto_9804_Red_HookFarSquared extends LinearOpMode {
             if (rightPower < 0.0) {
                 rightPower = 0.0;
             }
-            //when driving backwards, reverse leading and trailing
-            //left front is now trailing, left back is now leading
+            //when driving backwards
+            //left front is now leading, left back is now trailing
             //trailing gets full power
-            driveLeftFront.setPower(-leftPower);
-            driveLeftBack.setPower(-.95 * leftPower);       //creates belt tension between the drive pulleys
-            driveRightFront.setPower(-rightPower);
-            driveRightBack.setPower(-.95 * rightPower);
+            driveLeftFront.setPower(.95*leftPower);
+            driveLeftBack.setPower( leftPower );       //creates belt tension between the drive pulleys
+            driveRightFront.setPower(.95 * rightPower);
+            driveRightBack.setPower( rightPower );
 
             waitOneFullHardwareCycle();
 
 
         } while (EncErrorLeft > 0
                 && this.getRuntime() < 200);
-
-        grabRight.setPosition(grabRightDown);
-        grabLeft.setPosition(grabLeftDown);
 
         driveLeftBack.setPower(0.0);
         driveLeftFront.setPower(0.0);
