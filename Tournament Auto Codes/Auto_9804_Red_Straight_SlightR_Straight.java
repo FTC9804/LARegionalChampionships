@@ -207,6 +207,8 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
             // this is a signed heading not a basic heading
             currentHeading = gyro.getIntegratedZValue();
 
+            telemetry.addData("Current Angle: ", currentHeading);
+            
             headingError = targetHeading - currentHeading;
 
             driveSteering = headingError * driveGain;
