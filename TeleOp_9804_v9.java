@@ -127,6 +127,8 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
 	double winchToArmRatio;					//ratio of winch to arm
 	double armsInchesPerRotation;			//inches per rotation of arms
 	double winchInchesPerRotation;			//inches per rotation of winches
+	long currentRuntime;
+	long previousRuntime = 0;
 
     @Override
     public void init() {
@@ -187,6 +189,7 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
 
         //reset timer for match
         this.resetStartTime();
+  
     }
 
     @Override
@@ -312,24 +315,27 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
     //Proportional Arm and Winch extension
 
 		if ((gamepad2.dpad_up || gamepad1.dpad_up) && armsNotExtended) {      //moves arms and winches with d-pad buttons,
-
+			
 			leftWinch.setPower(1.0);
 			rightWinch.setPower(1.0);
-			this.resetStartTime();
-
 			
 			initialWinchPosition = Math.abs(leftWinch.getCurrentPosition());
 			initialArmPosition = Math.abs(arms.getCurrentPosition());
-
-			while (this.getRuntime() < 50) {} //assuming 50 is in ms
-
-			currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
-			currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
-
-			//calculate the speeds
-			currentWinchSpeed = currentWinchEncoderCounts/this.time; //units are clicks / ms
-			currentArmsSpeed = currentArmEncoderCounts/this.time; 	//units are clicks / ms
-
+			
+			if (System.currentTimeMillis() > previousRuntime + 50){
+				
+				currentDelta = System.currentTimeMillis() - previousRuntime;
+				previousRuntime = System.currentTimeMillis();
+				
+				currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
+				currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
+	
+				//calculate the speeds
+				currentWinchSpeed = currentWinchEncoderCounts/currentDelta; //units are clicks / ms
+				currentArmsSpeed = currentArmEncoderCounts/currentDelta; 	//units are clicks / ms	
+				
+			}
+			
 			targetArmsSpeed = currentWinchSpeed * winchToArmRatio;
 
 			armsSpeedError =  currentArmsSpeed - targetArmsSpeed;
@@ -350,21 +356,20 @@ public class TeleOp_9804_v4_variableGain extends OpMode {
 
 			leftWinch.setPower(-1.0);
 			rightWinch.setPower(-1.0);
-			this.resetStartTime();
-
-			//
-			initialWinchPosition = Math.abs(leftWinch.getCurrentPosition());
-			initialArmPosition = Math.abs(arms.getCurrentPosition());
-		
-
-			while (this.getRuntime() < 50) {} //assuming 50 is in ms
-
-			currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
-			currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
-
-			//calculate the speeds
-			currentWinchSpeed = currentWinchEncoderCounts/this.time; //units are clicks / ms
-			currentArmsSpeed = currentArmEncoderCounts/this.time; 	//units are clicks / ms
+			
+			if (System.currentTimeMillis() > previousRuntime + 50){
+				
+				currentDelta = System.currentTimeMillis() - previousRuntime;
+				previousRuntime = System.currentTimeMillis();
+				
+				currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
+				currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
+	
+				//calculate the speeds
+				currentWinchSpeed = currentWinchEncoderCounts/currentDelta; //units are clicks / ms
+				currentArmsSpeed = currentArmEncoderCounts/currentDelta; 	//units are clicks / ms	
+				
+			}
 
 			targetArmsSpeed = currentWinchSpeed * winchToArmRatio;
 
