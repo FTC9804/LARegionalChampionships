@@ -182,7 +182,7 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
             waitOneFullHardwareCycle();
 
 
-        } while (EncErrorLeft > 0
+        } while (EncErrorLeft > initialEncCountLeft
                 && this.getRuntime() < 200);
 
         driveLeftBack.setPower(0.0);
@@ -289,7 +289,7 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
             currentEncCountLeft = Math.abs(driveLeftBack.getCurrentPosition()) - initialEncCountLeft;
             currentEncCountRight = Math.abs(driveRightBack.getCurrentPosition()) - initialEncCountRight;
 
-            EncErrorLeft = targetEncoderCounts - currentEncCountLeft;
+            EncErrorLeft = targetEncoderCounts2 - currentEncCountLeft;
 
             telemetry.addData("Left Encoder:", currentEncCountLeft);
             telemetry.addData("Right Encoder:", currentEncCountRight);
@@ -329,7 +329,7 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
             waitOneFullHardwareCycle();
 
 
-        } while (EncErrorLeft > 0
+        } while (EncErrorLeft > initialEncCountLeft
                 && this.getRuntime() < 200);
 
         driveLeftBack.setPower(0.0);
@@ -354,7 +354,7 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
         driveGain = 0.05;                    //OK for spin
 
         midPower = 0.0;                     //spin move: zero driving-forward power
-        targetHeading = 90;                // 90 degrees CW (using signed heading)
+        targetHeading = -90;                // 90 degrees CW (using signed heading)
 
         this.resetStartTime();
 
@@ -395,7 +395,7 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
             waitOneFullHardwareCycle();
 
 
-        } while (currentHeading < targetHeading         //we are going to +90, so we will loop while <
+        } while (currentHeading > targetHeading         //we are going to -90, so we will loop while >
                 && this.getRuntime() < 5);
 
         driveLeftBack.setPower(0.0);
@@ -429,11 +429,12 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
         driveGain = 0.05;
 
         midPower = 0.75;
-        targetHeading = 90;              //drive straight ahead
+        targetHeading = -90;              //drive straight ahead
 
         targetDistance = 24.0;          //drive straight 24 inches
         rotations = targetDistance / circumference;
         targetEncoderCounts = encoderCountsPerRotation * rotations;
+        targetEncoderCounts3 = targetEncoderCounts2 + targetEncoderCounts;
 
         this.resetStartTime();
 
@@ -446,7 +447,7 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
             currentEncCountLeft = Math.abs(driveLeftBack.getCurrentPosition()) - initialEncCountLeft;
             currentEncCountRight = Math.abs(driveRightBack.getCurrentPosition()) - initialEncCountRight;
 
-            EncErrorLeft = targetEncoderCounts - currentEncCountLeft;
+            EncErrorLeft = targetEncoderCounts3 - currentEncCountLeft;
 
             telemetry.addData("Left Encoder:", currentEncCountLeft);
             telemetry.addData("Right Encoder:", currentEncCountRight);
@@ -486,7 +487,7 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
             waitOneFullHardwareCycle();
 
 
-        } while (EncErrorLeft > 0
+        } while (EncErrorLeft < initialEncCountLeft
                 && this.getRuntime() < 200);
 
         driveLeftBack.setPower(0.0);

@@ -127,7 +127,7 @@ public class Auto_9804_Red_CloseStart_Ramp extends LinearOpMode {
         targetDistance = 33.94;          //drive straight 33.94 inches
         rotations = targetDistance / circumference;
         targetEncoderCounts = encoderCountsPerRotation * rotations;
-        targetEncoderCounts1 = targetEncoderCounts
+        targetEncoderCounts1 = targetEncoderCounts;
         this.resetStartTime();
 
         initialEncCountLeft = Math.abs(driveLeftBack.getCurrentPosition());
