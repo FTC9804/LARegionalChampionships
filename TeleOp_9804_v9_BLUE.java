@@ -27,6 +27,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 //renamed to TeleOp_9804_v9 on 2-24-16 at 4:51
 //Corrected proportional arm to winch movement
 //get code ready for driver testing and practice field
+//CODE SEPERATED INTO 2 VERSIONS on 2-26-16 PM by Etienne Lunetta
+//    *renamed to TeleOp_9804_v9_BLUE on 2-26-16 PM by Etienne Lunetta
+//      untested and may be incorrect -- have not edited box function 
 
 
 
