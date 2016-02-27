@@ -6,17 +6,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /*
- * Created by stevecox on 2-24-16 at 3:47 pm.
- * Setup at back left edge of first full box from the center blue/red line on the red side
+ * Created by stevecox on 2-24-16 at 4:20 pm.
+ * Setup at back left edge of SECOND full box from the center blue/red line on the red side
  * Facing the shelter BACKWARDS
- * Drive for 2*2sqrt(2)*12 = 67.88 inches backwards
- * spins clockwise 45º
- * Drive backwards 24 inches
- * Do all this with spin motors running
+ * Drive for 1.5*2sqrt(2)*12 = 50.91 inches backwards with spin motors running
+ * spins counter clockwise 90º
+ * Drive forward 12 inches BACKWARDS
+ * spin 180º CW
+ * window wiper servo
+ * Drive forward 24 inches FORWARDS
  *headings increase with counter-clockwise rotation
  */
-
-public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
+public class Auto_9804_Red_FarStart_Ramp_v2 extends LinearOpMode {
 
     //drive motors
     DcMotor driveLeftBack;
@@ -30,6 +31,10 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
     Servo grabRight;
 
     Servo box;
+
+    //servo to push away debris from ramp
+    Servo windowWiper;
+
 
     double midPower;
     int targetHeading;
@@ -52,17 +57,21 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
     double targetEncoderCounts;
     double targetEncoderCounts1;
     double targetEncoderCounts2;
+    double targetEncoderCounts3;
     double EncErrorLeft;
     int telemetryVariable;
     int initialEncCountLeft;
     int initialEncCountRight;
 
 
-    //servo variables for grab servos
+    //servo variables
     double grabLeftUp = 0;                  //0 is max CCW (UP on left side)
     double grabLeftDown = 0.6;              //0.6 is approx. 90 degrees CW (DOWN on left side)
     double grabRightUp = 1.0;               //1 is max CW (UP on right side)
     double grabRightDown = 0.4;             //0.4 is approx. 90 degrees CCW (DOWN on right side)
+    double sweepOpened = 0.75;
+    double sweepClosed = 0;
+    double sweepPosition = sweepClosed;
     double boxPosition = 0.5;
 
 
@@ -74,16 +83,16 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
         driveRightBack = hardwareMap.dcMotor.get("m1");     // 1 on purple controller SN UVQF
         driveRightFront = hardwareMap.dcMotor.get("m2");    // 2 on purple
         spin = hardwareMap.dcMotor.get("m8");
-
-        //give the configuration file names for the servos
+        //give the servo names for the servos
         grabLeft = hardwareMap.servo.get("s1");             // xx on servo controller SN VSI1
         grabRight = hardwareMap.servo.get("s2");            // xx on servo controller
+        windowWiper = hardwareMap.servo.get("s5");
         box = hardwareMap.servo.get("s4");
-
 
         //sets initial positions for the servos to activate to
         grabLeft.setPosition(grabLeftUp);
         grabRight.setPosition(grabRightUp);
+        windowWiper.setPosition(sweepPosition);
         box.setPosition(boxPosition);
 
 
@@ -106,7 +115,7 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
 
 
 
-        //DRIVE BACKWARDS 67.88 INCHES
+        //DRIVE BACKWARDS 50.91 INCHES
 
 
         telemetry.clearData();
@@ -116,7 +125,7 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
         midPower = 0.66;
         targetHeading = 0;              //drive straight ahead
 
-        targetDistance = 67.88;          //drive straight 67.88 inches
+        targetDistance = 50.91;          //drive straight 50.91 inches
         rotations = targetDistance / circumference;
         targetEncoderCounts = encoderCountsPerRotation * rotations;
         targetEncoderCounts1 = targetEncoderCounts;
@@ -173,14 +182,13 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
             waitOneFullHardwareCycle();
 
 
-        } while (EncErrorLeft > 0
+        } while (EncErrorLeft > initialEncCountLeft
                 && this.getRuntime() < 200);
 
         driveLeftBack.setPower(0.0);
         driveLeftFront.setPower(0.0);
         driveRightBack.setPower(0.0);
         driveRightFront.setPower(0.0);
-        telemetry.clearData();
 
         spin.setPower (0);
 
@@ -195,13 +203,13 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
 
 
 
-        // SPIN CW 45 DEGREES
+        // SPIN CCW 90 DEGREES
 
 
         driveGain = 0.05;                    //OK for spin
 
         midPower = 0.0;                     //spin move: zero driving-forward power
-        targetHeading = -45;                // 45 degrees CW (using signed heading)
+        targetHeading = 90;                // 90 degrees CCW (using signed heading)
 
         this.resetStartTime();
 
@@ -231,7 +239,7 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
             if (rightPower < -1) {
                 rightPower = -1;
             }
-            //when drving backwards, reverse leading and trailing
+            //when driving backwards, reverse leading and trailing
             //left front is now trailing, left back is now leading
             //trailing gets full power
             driveLeftFront.setPower(leftPower);
@@ -242,7 +250,7 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
             waitOneFullHardwareCycle();
 
 
-        } while (currentHeading > targetHeading         //we are going to -45, so we will loop while >
+        } while (currentHeading < targetHeading         //we are going to +90, so we will loop while <
                 && this.getRuntime() < 2);
 
         driveLeftBack.setPower(0.0);
@@ -250,28 +258,25 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
         driveRightBack.setPower(0.0);
         driveRightFront.setPower(0.0);
 
-        telemetry.addData("spin 45 done", telemetryVariable);
+        telemetry.addData("spin 90 done", telemetryVariable);
         resetStartTime();
         while (this.getRuntime() < 1) {
             waitOneFullHardwareCycle();
         }
 
 
+        //DRIVE BACKWARDS 12 INCHES
 
-        //DRIVE BACKWARDS 24 INCHES
-
-
-        telemetry.clearData();
 
         driveGain = 0.05;
 
         midPower = 0.75;
-        targetHeading = -45;              //drive straight ahead
+        targetHeading = 90;              //drive straight ahead
 
-        targetDistance = 24.0;          //drive straight 24 inches
+        targetDistance = 12.0;          //drive straight 12 inches
         rotations = targetDistance / circumference;
         targetEncoderCounts = encoderCountsPerRotation * rotations;
-        targetEncoderCounts2 = targetEncoderCounts1 + targetEncoderCounts;
+        targetEncoderCounts2 = targetEncoderCounts + targetEncoderCounts1;
 
         this.resetStartTime();
 
@@ -280,7 +285,6 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
 
 
         do {
-            spin.setPower(1);  // Eject debris while driving
 
             currentEncCountLeft = Math.abs(driveLeftBack.getCurrentPosition()) - initialEncCountLeft;
             currentEncCountRight = Math.abs(driveRightBack.getCurrentPosition()) - initialEncCountRight;
@@ -328,14 +332,10 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
         } while (EncErrorLeft > initialEncCountLeft
                 && this.getRuntime() < 200);
 
-        grabRight.setPosition(grabRightDown);
-        grabLeft.setPosition(grabLeftDown);
-
         driveLeftBack.setPower(0.0);
         driveLeftFront.setPower(0.0);
         driveRightBack.setPower(0.0);
         driveRightFront.setPower(0.0);
-        telemetry.clearData();
 
         spin.setPower (0);
 
@@ -348,11 +348,173 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v2 extends LinearOpMode {
             waitOneFullHardwareCycle();
         }
 
+        //SPIN CW 180º
+
+
+        driveGain = 0.05;                    //OK for spin
+
+        midPower = 0.0;                     //spin move: zero driving-forward power
+        targetHeading = -90;                // 90 degrees CW (using signed heading)
+
+        this.resetStartTime();
+
+        do {
+
+            // get the Z-axis heading info.
+            // this is a signed heading not a basic heading
+            currentHeading = gyro.getIntegratedZValue();
+
+            telemetry.addData("Current Angle: ", currentHeading);
+
+            headingError = targetHeading - currentHeading;
+
+            driveSteering = headingError * driveGain;
+
+            leftPower = midPower - driveSteering;
+            if (leftPower > 1.0) {                            //cuts ourselves off at 1, the maximum motor power
+                leftPower = 1.0;
+            }
+            if (leftPower < -1) {                            //treads always moving forward
+                leftPower = -1;
+            }
+            rightPower = midPower + driveSteering;
+            if (rightPower > 1.0) {
+                rightPower = 1.0;
+            }
+            if (rightPower < -1) {
+                rightPower = -1;
+            }
+            //when driving backwards, reverse leading and trailing
+            //left front is now trailing, left back is now leading
+            //trailing gets full power
+            driveLeftFront.setPower(leftPower);
+            driveLeftBack.setPower(.95 * leftPower);       //creates belt tension between the drive pulleys
+            driveRightFront.setPower(rightPower);
+            driveRightBack.setPower(.95 * rightPower);
+
+            waitOneFullHardwareCycle();
+
+
+        } while (currentHeading > targetHeading         //we are going to -90, so we will loop while >
+                && this.getRuntime() < 5);
+
+        driveLeftBack.setPower(0.0);
+        driveLeftFront.setPower(0.0);
+        driveRightBack.setPower(0.0);
+        driveRightFront.setPower(0.0);
+
+        telemetry.addData("spin 180 done", telemetryVariable);
+        resetStartTime();
+        while (this.getRuntime() < 1) {
+            waitOneFullHardwareCycle();
+        }
+
+
+        //WINDOW WIPER MOTOR
+
+        windowWiper.setPosition(sweepOpened);
+
+        resetStartTime();
+        while (this.getRuntime() < 3) {
+            waitOneFullHardwareCycle();
+        }
+
+        windowWiper.setPosition(sweepClosed);
+
+
+
+
+        //DRIVE FORWARDS 24 INCHES
+
+        driveGain = 0.05;
+
+        midPower = 0.75;
+        targetHeading = -90;              //drive straight ahead
+
+        targetDistance = 24.0;          //drive straight 24 inches
+        rotations = targetDistance / circumference;
+        targetEncoderCounts = encoderCountsPerRotation * rotations;
+        targetEncoderCounts3 = targetEncoderCounts2 + targetEncoderCounts;
+
+        this.resetStartTime();
+
+        initialEncCountLeft = Math.abs(driveLeftBack.getCurrentPosition());
+        initialEncCountRight = Math.abs(driveRightBack.getCurrentPosition());
+
+
+        do {
+
+            currentEncCountLeft = Math.abs(driveLeftBack.getCurrentPosition()) - initialEncCountLeft;
+            currentEncCountRight = Math.abs(driveRightBack.getCurrentPosition()) - initialEncCountRight;
+
+            EncErrorLeft = targetEncoderCounts3 - currentEncCountLeft;
+
+            telemetry.addData("Left Encoder:", currentEncCountLeft);
+            telemetry.addData("Right Encoder:", currentEncCountRight);
+
+            currentDistance = (currentEncCountLeft * circumference) / encoderCountsPerRotation;
+            telemetry.addData("Calculated current distance: ", currentDistance);
+            // get the Z-axis heading info.
+            //this is a signed heading not a basic heading
+            currentHeading = gyro.getIntegratedZValue();
+
+            headingError = targetHeading - currentHeading;
+
+            driveSteering = headingError * driveGain;
+
+            leftPower = midPower - driveSteering;
+            if (leftPower > 1.0) {                            //cuts ourselves off at 1, the maximum motor power
+                leftPower = 1.0;
+            }
+            if (leftPower < 0.0) {                            //don't drive backwards
+                leftPower = 0.0;
+            }
+            rightPower = midPower + driveSteering;
+            if (rightPower > 1.0) {
+                rightPower = 1.0;
+            }
+            if (rightPower < 0.0) {
+                rightPower = 0.0;
+            }
+            //when driving backwards
+            //left front is now leading, left back is now trailing
+            //trailing gets full power
+            driveLeftFront.setPower(.95*leftPower);
+            driveLeftBack.setPower( leftPower );       //creates belt tension between the drive pulleys
+            driveRightFront.setPower(.95 * rightPower);
+            driveRightBack.setPower( rightPower );
+
+            waitOneFullHardwareCycle();
+
+
+        } while (EncErrorLeft < initialEncCountLeft
+                && this.getRuntime() < 200);
+
+        driveLeftBack.setPower(0.0);
+        driveLeftFront.setPower(0.0);
+        driveRightBack.setPower(0.0);
+        driveRightFront.setPower(0.0);
+
+
+        spin.setPower (0);
+
+        this.resetStartTime();
+
+
+        telemetry.addData("straight 3 done", telemetryVariable);
+        resetStartTime();
+        while (this.getRuntime() < 1) {
+            waitOneFullHardwareCycle();
+        }
+
+
+
         telemetry.addData("CODE COMPLETE", telemetryVariable);
         resetStartTime();
         while (this.getRuntime() < 1) {
             waitOneFullHardwareCycle();
         }
+
 
 
 
