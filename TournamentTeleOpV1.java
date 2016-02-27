@@ -1,4 +1,3 @@
-
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 //import OpModes
@@ -59,7 +58,7 @@ public class TournamentTeleOpV1 extends OpMode {
     Servo grabRight;
 
     //servo to release debris
-    Servo score;
+    //Servo score;
 
     //servo to drop arm for climbers
     Servo box;
@@ -68,10 +67,10 @@ public class TournamentTeleOpV1 extends OpMode {
     Servo sweep;
 
     //variables for driving
-    double trailingPowerRight;				//this code allows us to always give slightly
-    double leadingPowerRight;				//less power to leading motor to always
-    double trailingPowerLeft;				//ensure tension between the treads and
-    double leadingPowerLeft;				//ground for maximum driver control
+    double trailingPowerRight;                //this code allows us to always give slightly
+    double leadingPowerRight;                //less power to leading motor to always
+    double trailingPowerLeft;                //ensure tension between the treads and
+    double leadingPowerLeft;                //ground for maximum driver control
 
     //servo variables for grab servos
     double grabLeftUp = 0;                  //0 is max CCW (UP on left side)
@@ -80,9 +79,9 @@ public class TournamentTeleOpV1 extends OpMode {
     double grabRightDown = 0.4;             //0.4 is approx. 90 degrees CCW (DOWN on right side)
 
     //servo variables for score servo
-    double scoreClosed = 1.0;               //hopper door is closed (UP)
-    double scoreOpened = 0.0;               //hopper door is open (DOWN)
-    double scorePosition = scoreClosed;     //current position of door, initialize to UP
+    //double scoreClosed = 1.0;               //hopper door is closed (UP)
+    //double scoreOpened = 0.0;               //hopper door is open (DOWN)
+    //double scorePosition = scoreClosed;     //current position of door, initialize to UP
 
     //servo variable for continuous rotation box servo
     double boxMovingDown = 0.8;
@@ -96,41 +95,42 @@ public class TournamentTeleOpV1 extends OpMode {
 
 
     //gives the state of the magnet sensors for the LED activation and ability to stop the motors
-    boolean armsNotExtended = false; 	// state of magnetic sensors to false to light up
-    boolean armsNotRetracted = false;	//for initialization sequence
+    boolean armsNotExtended = false;    // state of magnetic sensors to false to light up
+    boolean armsNotRetracted = false;    //for initialization sequence
 
     //variables for the winch motors to allow automatic control with manual override
     double leftWinchSpeed = 0;
     double rightWinchSpeed = 0;
 
-    float joystickGainR = 1;
-    float joystickGainL = 1;
+    double joystickGainR = 1;
+    double joystickGainL = 1;
 
-    float joystick1ValueRight;
-    float joystick1ValueLeft;
+    double joystick1ValueRight;
+    double joystick1ValueLeft;
 
     //these are declarations for proportional winch to arm power
-    double initialWinchPosition;			//initial position of the winch
-    double currentWinchEncoderCounts;		//encoder counts for the winch motor
-    double initialArmPosition;				//initial position of the arms
-    double currentArmEncoderCounts;			//encoder counts for the arms motor
-    double armsSpeedGain = 1.744;			//need better estimate
-    double currentWinchSpeed;				//calculated speed for winch
-    double currentArmsSpeed;				//calculated speed for arms
-    double targetArmsSpeed;					//desired speed for arms
-    double armsSpeedError;					//error between target and current speeds
-    double armsMotorPower;					//power giving to the arms
-    double winchCircumference;				//circumference of the winch
-    double winchDiameter = 2.5; 			//inches
-    double armsPinionDiameter = 0.75; 		//inches
-    double pinionCircumference;				//circumference of pinion
-    double winchToArmRatio;					//ratio of winch to arm
-    double armsInchesPerRotation;			//inches per rotation of arms
-    double winchInchesPerRotation;			//inches per rotation of winches
+    int initialWinchPosition;            //initial position of the winch
+    int currentWinchEncoderCounts;        //encoder counts for the winch motor
+    int initialArmPosition;                //initial position of the arms
+    int currentArmEncoderCounts;            //encoder counts for the arms motor
+    double armsSpeedGain = 5;            //need better estimate
+    double currentWinchSpeed;                //calculated speed for winch
+    double currentArmsSpeed;                //calculated speed for arms
+    double targetArmsSpeed;                    //desired speed for arms
+    double armsSpeedError;                    //error between target and current speeds
+    double armsMotorPower;                    //power giving to the arms
+    double winchCircumference;                //circumference of the winch
+    double winchDiameter = 2.5;            //inches
+    double armsPinionDiameter = 0.75;        //inches
+    double pinionCircumference;                //circumference of pinion
+    double winchToArmRatio;                    //ratio of winch to arm
+    double armsInchesPerRotation;            //inches per rotation of arms
+    double winchInchesPerRotation;            //inches per rotation of winches
     long currentDelta;
-    long previousRuntime = 0;
+    long previousRuntime;
     boolean redTeam = true;
     boolean blueTeam = false;
+    long currentTime;
 
     @Override
     public void init() {
@@ -147,6 +147,7 @@ public class TournamentTeleOpV1 extends OpMode {
         retractLED.setState(false);                   // LEDs initialized "off"
         extendLED.setState(false);
 
+
         //gives name of drive motors
         driveLeftBack = hardwareMap.dcMotor.get("m5");      // 1 on red controller SN VUTK
         driveLeftFront = hardwareMap.dcMotor.get("m6");     // 2 on red
@@ -155,10 +156,10 @@ public class TournamentTeleOpV1 extends OpMode {
         driveRightFront = hardwareMap.dcMotor.get("m2");    // 2 on purple
 
         // set direction of L and R drive motors, since they are opposite-facing
-        driveRightFront.setDirection(DcMotor.Direction.FORWARD);  // right side forward
-        driveRightBack.setDirection(DcMotor.Direction.FORWARD);   // with positive voltage
-        driveLeftBack.setDirection(DcMotor.Direction.REVERSE);    // so we reverse the left side
-        driveLeftFront.setDirection(DcMotor.Direction.REVERSE);
+        driveRightFront.setDirection(DcMotor.Direction.REVERSE);  // LEFT side forward
+        driveRightBack.setDirection(DcMotor.Direction.REVERSE);   // with positive voltage
+        driveLeftBack.setDirection(DcMotor.Direction.FORWARD);    // so we reverse the RIGHT side
+        driveLeftFront.setDirection(DcMotor.Direction.FORWARD);
 
         //gives motor names for the other motors
         arms = hardwareMap.dcMotor.get("m7");               // 1 on green controller SN VF7F
@@ -171,8 +172,8 @@ public class TournamentTeleOpV1 extends OpMode {
         //give the servo names for the servos
         grabLeft = hardwareMap.servo.get("s1");             // xx on servo controller SN VSI1
         grabRight = hardwareMap.servo.get("s2");            // xx on servo controller
-        score = hardwareMap.servo.get("s3");
         box = hardwareMap.servo.get("s4");
+        sweep = hardwareMap.servo.get("s5");
 
         //calculate the winch to arm ratio
         getWinchToArmRatio(winchDiameter, armsPinionDiameter);
@@ -180,8 +181,10 @@ public class TournamentTeleOpV1 extends OpMode {
         //sets initial positions for the servos to activate to
         grabLeft.setPosition(grabLeftUp);
         grabRight.setPosition(grabRightUp);
-        score.setPosition(scoreClosed);
+        //score.setPosition(scoreClosed);
         box.setPosition(boxStopMoving);
+
+        previousRuntime = System.currentTimeMillis();
 
         this.resetStartTime();     //reset to allow time for servos to reach initialized positions
 
@@ -202,20 +205,22 @@ public class TournamentTeleOpV1 extends OpMode {
         armsNotExtended = sensorExtend.getState();
         armsNotRetracted = sensorRetract.getState();
         //telemetry for magnetic sensors on the driver station
-        telemetry.addData("Extended Sensor", String.format("%1d", (armsNotExtended ? 1 : 0)));
-        telemetry.addData("Retracted Sensor", String.format("%1d", (armsNotRetracted ? 1 : 0)));
-        telemetry.addData("7.", "RedTeam:  " + String.format("%.2f", redTeam));
-        telemetry.addData("7.", "BlueTeam:  " + String.format("%.2f", blueTeam));
+    /*
+    telemetry.addData("Extended Sensor", String.format("%1d", (armsNotExtended ? 1 : 0)));
 
+    telemetry.addData("Retracted Sensor", String.format("%1d", (armsNotRetracted ? 1 : 0)));
+    telemetry.addData("7.", "RedTeam:  " + String.format("%b", redTeam));
+    telemetry.addData("8.", "BlueTeam:  " + String.format("%b", blueTeam));
+*/
         //takes input from joysticks for motor values;
         // sets the front wheel at a lesser power to ensure belt tension
 
-        if ((gamepad1.back && gamepad1.x) || (gamepad2.back && gamepad2.x) ){
+        if ((gamepad1.back && gamepad1.x) || (gamepad2.back && gamepad2.x)) {
 
             redTeam = false;
             blueTeam = true;
 
-        } else if ((gamepad1.back && gamepad1.b) || (gamepad2.back && gamepad2.b) ) {
+        } else if ((gamepad1.back && gamepad1.b) || (gamepad2.back && gamepad2.b)) {
 
             blueTeam = false;
             redTeam = true;
@@ -225,19 +230,19 @@ public class TournamentTeleOpV1 extends OpMode {
         joystick1ValueLeft = gamepad1.left_stick_y;
         joystick1ValueRight = gamepad1.right_stick_y;
 
-        if (Math.abs(joystick1ValueLeft) >= 0.1 && Math.abs(joystick1ValueLeft) < 0.4){
-            joystickGainL = (float)0.4;
-        } else if (Math.abs(joystick1ValueLeft) >= 0.4 && Math.abs(joystick1ValueLeft) < 0.7){
-            joystickGainL = (float)0.7;
-        } else{
-            joystickGainL = (float)1;
+        if (Math.abs(joystick1ValueLeft) >= 0.1 && Math.abs(joystick1ValueLeft) < 0.4) {
+            joystickGainL = 0.4;
+        } else if (Math.abs(joystick1ValueLeft) >= 0.4 && Math.abs(joystick1ValueLeft) < 0.7) {
+            joystickGainL = 0.7;
+        } else {
+            joystickGainL = 1;
         }
-        if (Math.abs(joystick1ValueRight) >= 0.1 && Math.abs(joystick1ValueRight) < 0.4){
-            joystickGainR = (float)0.4;
-        } else if (Math.abs(joystick1ValueRight) >= 0.4 && Math.abs(joystick1ValueRight) < 0.7){
-            joystickGainR = (float)0.7;
-        } else{
-            joystickGainR = (float)1;
+        if (Math.abs(joystick1ValueRight) >= 0.1 && Math.abs(joystick1ValueRight) < 0.4) {
+            joystickGainR = 0.4;
+        } else if (Math.abs(joystick1ValueRight) >= 0.4 && Math.abs(joystick1ValueRight) < 0.7) {
+            joystickGainR = 0.7;
+        } else {
+            joystickGainR = 1;
         }
         trailingPowerLeft = joystick1ValueLeft * joystickGainL;
         leadingPowerLeft = .95 * trailingPowerLeft;
@@ -278,7 +283,6 @@ public class TournamentTeleOpV1 extends OpMode {
         }
 
 
-
         //takes input from buttons for spin motors
         if (gamepad2.a) {                   //collect debris
             spin.setPower(-1);
@@ -298,21 +302,18 @@ public class TournamentTeleOpV1 extends OpMode {
 
         if (gamepad1.x) {
             boxPower = boxMovingDown;
-        }
-        else if (gamepad1.b) {
+        } else if (gamepad1.b) {
             boxPower = boxMovingUp;
-        }
-        else {
+        } else {
             boxPower = boxStopMoving;
         }
 
         box.setPosition(boxPower);
 
 
-        if (gamepad1.b) {
+        if (gamepad1.a) {
             sweepPosition = sweepOpened;
-        }
-        else {
+        } else {
             sweepPosition = sweepClosed;
         }
 
@@ -343,23 +344,25 @@ public class TournamentTeleOpV1 extends OpMode {
             initialWinchPosition = Math.abs(leftWinch.getCurrentPosition());
             initialArmPosition = Math.abs(arms.getCurrentPosition());
 
-            if (System.currentTimeMillis() > previousRuntime + 50){
+            currentTime = System.currentTimeMillis();
 
-                currentDelta = System.currentTimeMillis() - previousRuntime;
-                previousRuntime = System.currentTimeMillis();
+            if (currentTime > (previousRuntime + 50) ) {
+
+                currentDelta = currentTime - previousRuntime;
+                previousRuntime = currentTime;
 
                 currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
                 currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
 
                 //calculate the speeds
-                currentWinchSpeed = currentWinchEncoderCounts/currentDelta; //units are clicks / ms
-                currentArmsSpeed = currentArmEncoderCounts/currentDelta; 	//units are clicks / ms
+                currentWinchSpeed = currentWinchEncoderCounts / currentDelta; //units are clicks / ms
+                currentArmsSpeed = currentArmEncoderCounts / currentDelta;    //units are clicks / ms
 
             }
 
             targetArmsSpeed = currentWinchSpeed * winchToArmRatio;
 
-            armsSpeedError =  currentArmsSpeed - targetArmsSpeed;
+            armsSpeedError = currentArmsSpeed - targetArmsSpeed;
 
             armsMotorPower = armsSpeedError * armsSpeedGain;
 
@@ -377,35 +380,7 @@ public class TournamentTeleOpV1 extends OpMode {
 
             leftWinch.setPower(-1.0);
             rightWinch.setPower(-1.0);
-
-            if (System.currentTimeMillis() > previousRuntime + 50){
-
-                currentDelta = System.currentTimeMillis() - previousRuntime;
-                previousRuntime = System.currentTimeMillis();
-
-                currentWinchEncoderCounts = Math.abs(leftWinch.getCurrentPosition()) - initialWinchPosition;
-                currentArmEncoderCounts = Math.abs(arms.getCurrentPosition()) - initialArmPosition;
-
-                //calculate the speeds
-                currentWinchSpeed = currentWinchEncoderCounts/currentDelta; //units are clicks / ms
-                currentArmsSpeed = currentArmEncoderCounts/currentDelta; 	//units are clicks / ms
-
-            }
-
-            targetArmsSpeed = currentWinchSpeed * winchToArmRatio;
-
-            armsSpeedError =  currentArmsSpeed - targetArmsSpeed;
-
-            armsMotorPower = armsSpeedError * armsSpeedGain;
-
-            if (armsMotorPower < -1) {
-                armsMotorPower = -1;
-            }
-            if (armsMotorPower > 0) {
-                armsMotorPower = 0;
-            }
-
-            arms.setPower(armsMotorPower);
+            arms.setPower(-winchToArmRatio);
 
         } else {
             arms.setPower(0);
@@ -418,35 +393,34 @@ public class TournamentTeleOpV1 extends OpMode {
         }                                                                   //motors when driver
         if (gamepad2.right_stick_y > .1 || gamepad2.right_stick_y < -.1) {  //wants control
             rightWinchSpeed = gamepad2.right_stick_y;
-        }
-        else {
+        } else {
             leftWinchSpeed = 0;
             rightWinchSpeed = 0;
         }
 
         rightWinch.setPower(rightWinchSpeed);           //sets power of the winches to the
         leftWinch.setPower(leftWinchSpeed);             //specified power
-
+/*
         telemetry.addData("5.", "Arm Error:  " + String.format("%.2f", armsSpeedError));
         telemetry.addData("6.", "Arms Power:  " + String.format("%.2f", armsMotorPower));
-
+*/
 
     }//finish loop
 
-    public double getWinchToArmRatio(double winchDia, double armsDia){
+    public double getWinchToArmRatio(double winchDia, double armsDia) {
 
         winchCircumference = winchDia * 3.14159;
 
-        winchInchesPerRotation = (winchCircumference )/4; //Gear ratio is 4
+        winchInchesPerRotation = winchCircumference / 4; //Gear ratio is 4
 
         pinionCircumference = armsDia * 3.14159;
 
-        armsInchesPerRotation = pinionCircumference; //  gear ratio is one
+        armsInchesPerRotation = 2.5 * pinionCircumference ; //  gear ratio is one, 3 bars connected with 'cascading strings'
 
-        winchToArmRatio = winchInchesPerRotation/armsInchesPerRotation;
-
+        winchToArmRatio = winchInchesPerRotation / armsInchesPerRotation;
+/*
         telemetry.addData("1", "winch to arm ratio:  " + String.format("%.2f", winchToArmRatio));
-
+*/
         return winchToArmRatio;
     }//finish ratio calculator
 
