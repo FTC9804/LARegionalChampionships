@@ -45,14 +45,14 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v3 extends LinearOpMode {
 
 
     double targetDistance;
-    double encoderCountsPerRotation = 1120;
+    int encoderCountsPerRotation = 1120;
     double diameter = 3.5;
     double circumference = diameter * 3.14159;
     double rotations;
-    double targetEncoderCounts;
-    double targetEncoderCounts1;
-    double targetEncoderCounts2;
-    double EncErrorLeft;
+    int targetEncoderCounts;
+    int targetEncoderCounts1;
+    int targetEncoderCounts2;
+    int EncErrorLeft;
     int telemetryVariable;
     int initialEncCountLeft;
     int initialEncCountRight;
@@ -118,7 +118,7 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v3 extends LinearOpMode {
 
         targetDistance = 67.88;          //drive straight 67.88 inches
         rotations = targetDistance / circumference;
-        targetEncoderCounts = encoderCountsPerRotation * rotations;
+        targetEncoderCounts = (int)(encoderCountsPerRotation * rotations);
         targetEncoderCounts1 = targetEncoderCounts;
 
         this.resetStartTime();
@@ -133,7 +133,7 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v3 extends LinearOpMode {
             currentEncCountLeft = driveLeftBack.getCurrentPosition() - initialEncCountLeft;
             currentEncCountRight = driveRightBack.getCurrentPosition() - initialEncCountRight;
 
-            EncErrorLeft = Math.abs(targetEncoderCounts1 - currentEncCountLeft);
+            EncErrorLeft = targetEncoderCounts1 - Math.abs(currentEncCountLeft);
 
             telemetry.addData("Left Encoder:", currentEncCountLeft);
             telemetry.addData("Right Encoder:", currentEncCountRight);
@@ -243,7 +243,7 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v3 extends LinearOpMode {
 
 
         } while (currentHeading > targetHeading         //we are going to -45, so we will loop while >
-                && this.getRuntime() < 100);
+                && this.getRuntime() < 5);
 
         driveLeftBack.setPower(0.0);
         driveLeftFront.setPower(0.0);
@@ -270,7 +270,7 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v3 extends LinearOpMode {
 
         targetDistance = 24.0;          //drive straight 24 inches
         rotations = targetDistance / circumference;
-        targetEncoderCounts = encoderCountsPerRotation * rotations;
+        targetEncoderCounts = (int)(encoderCountsPerRotation * rotations);
         targetEncoderCounts2 = targetEncoderCounts;
 
         this.resetStartTime();
@@ -285,7 +285,7 @@ public class Auto_9804_Red_Straight_SlightR_Straight_v3 extends LinearOpMode {
             currentEncCountLeft = driveLeftBack.getCurrentPosition() - initialEncCountLeft;
             currentEncCountRight = driveRightBack.getCurrentPosition() - initialEncCountRight;
 
-            EncErrorLeft = Math.abs(targetEncoderCounts2 - currentEncCountLeft);
+            EncErrorLeft = targetEncoderCounts2 - Math.abs(currentEncCountLeft);
 
             telemetry.addData("Left Encoder:", currentEncCountLeft);
             telemetry.addData("Right Encoder:", currentEncCountRight);

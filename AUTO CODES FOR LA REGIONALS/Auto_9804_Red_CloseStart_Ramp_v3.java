@@ -247,7 +247,7 @@ public class Auto_9804_Red_CloseStart_Ramp_v3 extends LinearOpMode {
 
 
         } while (currentHeading > targetHeading         //we are going to -90, so we will loop while >
-                && this.getRuntime() < 100);
+                && this.getRuntime() < 7);
 
         driveLeftBack.setPower(0.0);
         driveLeftFront.setPower(0.0);
