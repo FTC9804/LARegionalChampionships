@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  *headings increase with counter-clockwise rotation
  */
 
-public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
+public class Auto_9804_Red_Straight_SlightR_Straight extends LinearOpMode {
 
     //drive motors
     DcMotor driveLeftBack;
@@ -45,8 +45,8 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
 
 
     double targetDistance;
-    double encoderCountsPerRotation = 1440;
-    double diameter = 2;
+    double encoderCountsPerRotation = 1120;
+    double diameter = 3.5;
     double circumference = diameter * 3.14159;
     double rotations;
     double targetEncoderCounts;

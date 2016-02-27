@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Drive forward 24 inches FORWARDS
  *headings increase with counter-clockwise rotation
  */
-public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
+public class Auto_9804_Red_FarStart_Ramp_v2 extends LinearOpMode {
 
     //drive motors
     DcMotor driveLeftBack;
@@ -50,8 +50,8 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
 
 
     double targetDistance;
-    double encoderCountsPerRotation = 1440;
-    double diameter = 2;
+    double encoderCountsPerRotation = 1120;
+    double diameter = 3.5;
     double circumference = diameter * 3.14159;
     double rotations;
     double targetEncoderCounts;

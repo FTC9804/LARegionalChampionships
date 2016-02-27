@@ -44,8 +44,8 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
 
 
     double targetDistance;
-    double encoderCountsPerRotation = 1440;
-    double diameter = 2;
+    double encoderCountsPerRotation = 1120;
+    double diameter = 3.5;
     double circumference = diameter * 3.14159;
     double rotations;
     double targetEncoderCounts;
@@ -208,7 +208,7 @@ public class Auto_9804_Straight_SlightR_Straight extends LinearOpMode {
             currentHeading = gyro.getIntegratedZValue();
 
             telemetry.addData("Current Angle: ", currentHeading);
-            
+
             headingError = targetHeading - currentHeading;
 
             driveSteering = headingError * driveGain;

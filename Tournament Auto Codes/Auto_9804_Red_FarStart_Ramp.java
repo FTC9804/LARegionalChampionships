@@ -49,8 +49,8 @@ public class Auto_9804_Red_FarStart_Ramp extends LinearOpMode {
 
 
     double targetDistance;
-    double encoderCountsPerRotation = 1440;
-    double diameter = 2;
+    double encoderCountsPerRotation = 1120;
+    double diameter = 3.5;
     double circumference = diameter * 3.14159;
     double rotations;
     double targetEncoderCounts;
