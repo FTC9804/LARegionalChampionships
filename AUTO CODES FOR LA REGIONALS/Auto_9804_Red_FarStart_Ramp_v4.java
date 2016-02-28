@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Drive forward 24 inches FORWARDS
  *headings increase with counter-clockwise rotation
  */
-public class Auto_9804_Red_FarStart_Ramp_v3 extends LinearOpMode {
+public class Auto_9804_Red_FarStart_Ramp_v4 extends LinearOpMode {
 
     //drive motors
     DcMotor driveLeftBack;
@@ -183,7 +183,7 @@ public class Auto_9804_Red_FarStart_Ramp_v3 extends LinearOpMode {
 
 
         } while (EncErrorLeft > 0
-                && this.getRuntime() < 200);
+                && this.getRuntime() < 15);
 
         driveLeftBack.setPower(0.0);
         driveLeftFront.setPower(0.0);
@@ -330,7 +330,7 @@ public class Auto_9804_Red_FarStart_Ramp_v3 extends LinearOpMode {
 
 
         } while (EncErrorLeft > 0
-                && this.getRuntime() < 200);
+                && this.getRuntime() < 10);
 
         driveLeftBack.setPower(0.0);
         driveLeftFront.setPower(0.0);
@@ -426,14 +426,14 @@ public class Auto_9804_Red_FarStart_Ramp_v3 extends LinearOpMode {
 
 
 
-        //DRIVE FORWARDS 24 INCHES
+        //DRIVE FORWARDS 36 INCHES
 
         driveGain = 0.05;
 
         midPower = 0.75;
         targetHeading = -90;              //drive straight ahead
 
-        targetDistance = 24.0;          //drive straight 24 inches
+        targetDistance = 36.0;          //drive straight 36 inches
         rotations = targetDistance / circumference;
         targetEncoderCounts = (int)(encoderCountsPerRotation * rotations);
         targetEncoderCounts3 = targetEncoderCounts;
@@ -488,7 +488,7 @@ public class Auto_9804_Red_FarStart_Ramp_v3 extends LinearOpMode {
 
 
         } while (EncErrorLeft > 0
-                && this.getRuntime() < 200);
+                && this.getRuntime() < 15);
 
         driveLeftBack.setPower(0.0);
         driveLeftFront.setPower(0.0);
